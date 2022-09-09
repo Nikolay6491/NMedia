@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2115" />
+        <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2115" />
         <entry key="..\:/netology/NMedia/app/src/main/res/layout/activity_main.xml" value="0.1911231884057971" />
       </map>
     </option>
