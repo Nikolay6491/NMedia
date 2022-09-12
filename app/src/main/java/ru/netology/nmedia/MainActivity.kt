@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity() {
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            favorites.text = post.favorites.toString()
-            shares.text = post.shares.toString()
-            removes.text = post.removes.toString()
+            favorites.text = PostService.showValues(post.favorites)
+            shares.text = PostService.showValues(post.shares)
+            removes.text = PostService.showValues(post.removes)
             if (post.favoritesByMe) {
                 favorite.setImageResource(R.drawable.ic_baseline_favorite_24)
             }
