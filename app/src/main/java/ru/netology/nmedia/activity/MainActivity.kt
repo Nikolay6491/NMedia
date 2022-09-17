@@ -3,7 +3,6 @@ package ru.netology.nmedia.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -51,16 +50,14 @@ class MainActivity : AppCompatActivity() {
                     if (post.favoritesByMe) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
                 )
             }
+        }
 
-            binding.favorite.setOnClickListener {
-                viewModel.favorite()
-                post.favoritesByMe = !post.favoritesByMe
-                favorites.text = if (post.favoritesByMe) PostService.showValues(++post.favorites) else PostService.showValues(--post.favorites)
-            }
+        binding.favorite.setOnClickListener {
+            viewModel.favorite()
+        }
 
-            binding.share.setOnClickListener {
-                shares.text = PostService.showValues(++post.shares)
-            }
+        binding.share.setOnClickListener {
+            viewModel.share()
         }
     }
 }

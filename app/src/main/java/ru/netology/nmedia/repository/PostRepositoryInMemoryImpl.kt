@@ -2,6 +2,7 @@ package ru.netology.nmedia.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.netology.nmedia.activity.PostService
 import ru.netology.nmedia.dto.Post
 
 class PostRepositoryInMemoryImpl : PostRepository {
@@ -17,7 +18,13 @@ class PostRepositoryInMemoryImpl : PostRepository {
 
     override fun get(): LiveData<Post> = data
     override fun favorite() {
-        post = post.copy(favoritesByMe = !post.favoritesByMe)
+        if (!post.favoritesByMe) PostService.showValues(++post.favorites) else PostService.showValues(--post.favorites)
+        post = post.copy(favoritesByMe =  !post.favoritesByMe)
+        data.value = post
+    }
+
+    override fun share() {
+        post = post.copy(shares = ++post.shares)
         data.value = post
     }
 }
