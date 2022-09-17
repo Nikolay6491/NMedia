@@ -5,8 +5,8 @@ data class Post (
     val author: String,
     val content: String,
     val published: String,
-    var favorites: Long = 0,
-    var shares: Long = 0,
+    val favorites: Long = 0,
+    val shares: Long = 0,
     val removes: Long = 0,
     val favoritesByMe: Boolean
 )
