@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2115" />
+        <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2115" />
         <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.153" />
         <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2115" />
         <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2115" />
         <entry key="..\:/netology/NMedia/app/src/main/res/drawable/ic_netology_48dp.xml" value="0.2115" />
         <entry key="..\:/netology/NMedia/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/netology/NMedia/app/src/main/res/layout/card_post.xml" value="0.17375886524822695" />
       </map>
     </option>
   </component>
