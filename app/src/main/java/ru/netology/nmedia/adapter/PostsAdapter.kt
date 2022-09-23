@@ -55,6 +55,10 @@ class PostViewHolder(
                             onInteractionListener.onRemove(post)
                             true
                         }
+                        R.id.edit -> {
+                            onInteractionListener.onEdit(post)
+                            true
+                        }
                         else -> false
                     }
                 }
@@ -70,7 +74,7 @@ class PostViewHolder(
             content.text = post.content
             favorites.text = PostService.showValues(post.favorites)
             favorite.setImageResource(
-               if (post.favoritesByMe) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
+                if (post.favoritesByMe) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
             )
             shares.text = PostService.showValues(post.shares)
         }
