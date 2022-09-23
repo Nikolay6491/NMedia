@@ -1,8 +1,8 @@
 package ru.netology.nmedia.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,18 +11,19 @@ import ru.netology.nmedia.activity.PostService
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 
-typealias OnListener = (post: Post) -> Unit
+interface OnInteractionListener {
+    fun onFavorite(post: Post) {}
+    fun onShare(post: Post) {}
+    fun onEdit(post: Post) {}
+    fun onRemove(post: Post) {}
+}
 
 class PostsAdapter(
-    val context: Context,
-    private val onFavoriteListener: OnListener,
-    private val onShareListener: OnListener) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
-
-    private val inflater = LayoutInflater.from(context)
-
+    private val onInteractionListener: OnInteractionListener,
+) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val binding = CardPostBinding.inflate(inflater, parent, false)
-        return PostViewHolder(binding, onFavoriteListener, onShareListener)
+        val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PostViewHolder(binding, onInteractionListener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -33,18 +34,31 @@ class PostsAdapter(
 
 class PostViewHolder(
     private val binding: CardPostBinding,
-    private val onFavoriteListener: OnListener,
-    private val onShareListener: OnListener
+    private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     lateinit var post: Post
 
     init {
         binding.favorite.setOnClickListener{
-            onFavoriteListener(post)
+            onInteractionListener.onFavorite(post)
         }
         binding.share.setOnClickListener {
-            onShareListener(post)
+            onInteractionListener.onShare(post)
+        }
+        binding.menu.setOnClickListener {
+            PopupMenu (it.context, it).apply {
+                inflate(R.menu.options_post)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.remove -> {
+                            onInteractionListener.onRemove(post)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }.show()
         }
     }
 

@@ -2,4 +2,5 @@
 <resources>
     <dimen name="avatar_size">48dp</dimen>
     <dimen name="margin_default">16dp</dimen>
+    <dimen name="commonSpacing">16dp</dimen>
 </resources>

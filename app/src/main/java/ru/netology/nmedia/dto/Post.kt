@@ -7,7 +7,7 @@ data class Post (
     val published: String,
     val favorites: Long = 0,
     var shares: Long = 0,
-    val removes: Long = 0,
+    val views: Long = 0,
     val favoritesByMe: Boolean,
     val sharesByMe: Boolean
 )

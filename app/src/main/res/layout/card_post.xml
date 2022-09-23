@@ -111,25 +111,25 @@
         tools:text="@sample/posts.json/data/shares" />
 
     <ImageButton
-        android:id="@+id/remove"
+        android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:background="@android:color/transparent"
-        android:contentDescription="@string/remove"
+        android:contentDescription="@string/views"
         android:src="@drawable/ic_baseline_remove_red_eye_24"
         app:layout_constraintBottom_toBottomOf="@id/favorite"
         app:layout_constraintTop_toTopOf="@id/favorite"
-        app:layout_constraintEnd_toStartOf="@id/removes"/>
+        app:layout_constraintEnd_toStartOf="@id/views"/>
 
     <TextView
-        android:id="@+id/removes"
+        android:id="@+id/views"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_default"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/remove"
-        app:layout_constraintBottom_toBottomOf="@id/remove"
-        tools:text="@sample/posts.json/data/removes" />
+        app:layout_constraintTop_toTopOf="@id/view"
+        app:layout_constraintBottom_toBottomOf="@id/view"
+        tools:text="@sample/posts.json/data/views" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,5 +5,11 @@
     <string name="description_post_menu">Post menu</string>
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
-    <string name="remove">Remove</string>
+    <string name="views">Views</string>
+    <string name="menu_remove">Remove</string>
+    <string name="menu_edit">Edit</string>
+    <string name="post_text">Post text</string>
+    <string name="description_post_save">Save</string>
+    <string name="description_post_cancel">Cancel</string>
+    <string name="error_empty_content">Content can\'t be empty</string>
 </resources>
