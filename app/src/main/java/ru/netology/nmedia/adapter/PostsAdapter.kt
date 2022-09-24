@@ -73,9 +73,7 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
             favorites.text = PostService.showValues(post.favorites)
-            favorite.setImageResource(
-                if (post.favoritesByMe) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
-            )
+            favorite.isChecked = post.favoritesByMe
             shares.text = PostService.showValues(post.shares)
         }
     }
