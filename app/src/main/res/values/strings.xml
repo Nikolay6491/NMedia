@@ -12,4 +12,7 @@
     <string name="description_post_save">Save</string>
     <string name="description_post_cancel">Cancel</string>
     <string name="error_empty_content">Content can\'t be empty</string>
+    <string name="add_post">Add post</string>
+    <string name="enter_text">Enter the text</string>
+    <string name="play_video">Play video</string>
 </resources>
