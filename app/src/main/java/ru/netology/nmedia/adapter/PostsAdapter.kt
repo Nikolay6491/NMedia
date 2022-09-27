@@ -1,9 +1,9 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -87,11 +87,11 @@ class PostViewHolder(
             shares.text = PostService.showValues(post.shares)
 
             if (post.video == null) {
-                videoContent.visibility = View.GONE
-                playButton.visibility = View.GONE
+                videoContent.isVisible
+                playButton.isVisible
             } else {
-                videoContent.visibility = View.VISIBLE
-                playButton.visibility = View.VISIBLE
+                videoContent.isVisible
+                playButton.isVisible
             }
         }
     }
