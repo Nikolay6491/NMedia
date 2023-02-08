@@ -13,9 +13,6 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
         const val COLUMN_AUTHOR = "author"
         const val COLUMN_CONTENT = "content"
         const val COLUMN_PUBLISHED = "published"
-        const val COLUMN_FAVORITES = "favorites"
-        const val COLUMN_SHARES = "shares"
-        const val COLUMN_VIEWS = "views"
         const val COLUMN_FAVORITES_BY_ME = "favoritesByMe"
         const val COLUMN_SHARES_BY_ME = "sharesByMe"
         const val COLUMN_VIDEO = "video"
@@ -24,9 +21,6 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
             COLUMN_AUTHOR,
             COLUMN_CONTENT,
             COLUMN_PUBLISHED,
-            COLUMN_FAVORITES,
-            COLUMN_SHARES,
-            COLUMN_VIEWS,
             COLUMN_FAVORITES_BY_ME,
             COLUMN_SHARES_BY_ME,
             COLUMN_VIDEO
@@ -119,9 +113,6 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
                 author = getString(getColumnIndexOrThrow(PostColumns.COLUMN_AUTHOR)),
                 content = getString(getColumnIndexOrThrow(PostColumns.COLUMN_CONTENT)),
                 published = getString(getColumnIndexOrThrow(PostColumns.COLUMN_PUBLISHED)),
-                favorites = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_FAVORITES)),
-                shares = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARES)),
-                views = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_VIEWS)),
                 favoritesByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_FAVORITES_BY_ME)) != 0,
                 sharesByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARES_BY_ME)) != 0,
                 video = getString(getColumnIndexOrThrow(PostColumns.COLUMN_VIDEO)),
@@ -136,9 +127,6 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
             ${PostColumns.COLUMN_AUTHOR} TEXT NOT NULL
             ${PostColumns.COLUMN_CONTENT} TEXT NOT NULL
             ${PostColumns.COLUMN_PUBLISHED} TEXT NOT NULL
-            ${PostColumns.COLUMN_FAVORITES} INTEGER NOT NULL DEFAULT 0
-            ${PostColumns.COLUMN_SHARES} INTEGER NOT NULL DEFAULT 0
-            ${PostColumns.COLUMN_VIEWS} INTEGER NOT NULL DEFAULT 0
             ${PostColumns.COLUMN_FAVORITES_BY_ME} BOOLEAN NOT NULL DEFAULT 0
             ${PostColumns.COLUMN_SHARES_BY_ME} BOOLEAN NOT NULL DEFAULT 0
             ${PostColumns.COLUMN_VIDEO} TEXT NOT NULL
