@@ -32,12 +32,17 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun favoriteById(id: Long) = repository.favoritesById(id)
     fun removeById(id: Long) = repository.removeById(id)
 
-    fun changeContentAndSave(content: String) {
-        if (content == edited.value?.content) {
+    fun changeContent(content: String) {
+        val text = content.trim()
+        if (edited.value?.content == text) {
             return
         }
+        edited.value = edited.value?.copy(content = text)
+    }
+
+    fun save() {
         edited.value?.let {
-            repository.save(it.copy(content = content))
+            repository.save(it)
         }
         edited.value = empty
     }
