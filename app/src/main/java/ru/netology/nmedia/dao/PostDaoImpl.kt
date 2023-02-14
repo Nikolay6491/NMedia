@@ -123,13 +123,13 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     companion object {
         val DDL = """
         CREATE TABLE ${PostColumns.TABLE} (
-            ${PostColumns.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT
-            ${PostColumns.COLUMN_AUTHOR} TEXT NOT NULL
-            ${PostColumns.COLUMN_CONTENT} TEXT NOT NULL
-            ${PostColumns.COLUMN_PUBLISHED} TEXT NOT NULL
-            ${PostColumns.COLUMN_FAVORITES_BY_ME} BOOLEAN NOT NULL DEFAULT 0
-            ${PostColumns.COLUMN_SHARES_BY_ME} BOOLEAN NOT NULL DEFAULT 0
-            ${PostColumns.COLUMN_VIDEO} TEXT NOT NULL
+            ${PostColumns.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${PostColumns.COLUMN_AUTHOR} TEXT NOT NULL,
+            ${PostColumns.COLUMN_CONTENT} TEXT NOT NULL,
+            ${PostColumns.COLUMN_PUBLISHED} TEXT NOT NULL,
+            ${PostColumns.COLUMN_FAVORITES_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_SHARES_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
+            ${PostColumns.COLUMN_VIDEO} TEXT NOT NULL,
         );
         """.trimIndent()
     }
