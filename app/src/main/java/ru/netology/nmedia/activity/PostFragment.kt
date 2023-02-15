@@ -53,10 +53,6 @@ class PostFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
-            override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
-            }
-
             override fun playVideo(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
