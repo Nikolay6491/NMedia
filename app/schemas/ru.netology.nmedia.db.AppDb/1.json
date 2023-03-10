@@ -85,4 +85,5 @@
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7b22db5d4f69810ddcd9ffec935e54c')"
     ]
   }
+
 }
