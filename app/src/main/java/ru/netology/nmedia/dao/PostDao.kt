@@ -22,12 +22,17 @@ interface PostDao {
 
     @Query("""
        UPDATE PostEntity SET
-        favorites = favorites + 1
+        favorites = favorites + CASE WHEN favorites THEN -1 ELSE 1 END,
+        favoritesByMe = CASE WHEN favoritesByMe THEN 0 ELSE 1 END
         WHERE id = :id;
     """)
     fun favoritesById(id: Long)
 
-    @Query("DELETE FROM PostEntity WHERE id = :id")
+    @Query("""
+       UPDATE PostEntity SET
+        shares = shares + 1
+        WHERE id = :id;
+    """)
     fun sharesById(id: Long)
 
 }
