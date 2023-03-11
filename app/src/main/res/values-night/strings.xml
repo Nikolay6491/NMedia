@@ -16,4 +16,7 @@
     <string name="google_play_unavailable">Google API Unavailable</string>
     <string name="error_notification_title">You are using an old version of the application</string>
     <string name="error_notification_text">Please update the application for correct operation</string>
+    <string name="error">Something bad happened</string>
+    <string name="retry">Retry</string>
+    <string name="empty_posts">Empry posts</string>
 </resources>

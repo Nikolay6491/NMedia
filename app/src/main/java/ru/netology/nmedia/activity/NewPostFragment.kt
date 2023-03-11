@@ -32,8 +32,13 @@ class NewPostFragment : Fragment() {
             val text = binding.edit.text.toString()
             viewModel.changeContent(text)
             viewModel.save()
+        }
+
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            viewModel.load()
             findNavController().navigateUp()
         }
+
         return binding.root
     }
 

@@ -1,4 +1,4 @@
-package ru.netology.nmedia.repository
+/* package ru.netology.nmedia.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -62,7 +62,7 @@ class PostRepositoryFilesImpl(val context: Context) : PostRepository {
         data.value = posts
     }
 
-    override fun getAll(): LiveData<List<Post>> = data
+    override fun getAll(): List<Post> = data
     
     override fun favoritesById(id: Long) {
         posts = posts.map {
@@ -74,7 +74,7 @@ class PostRepositoryFilesImpl(val context: Context) : PostRepository {
         data.value = posts
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
         if (post.id == 0L) {
             posts = listOf(
                 post.copy(
@@ -108,4 +108,4 @@ class PostRepositoryFilesImpl(val context: Context) : PostRepository {
             it.write(gson.toJson(posts))
         }
     }
-}
+}*/

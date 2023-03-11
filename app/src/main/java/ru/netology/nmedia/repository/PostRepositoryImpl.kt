@@ -1,33 +1,78 @@
 package ru.netology.nmedia.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import ru.netology.nmedia.dao.PostDao
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.PostEntity
+import java.util.concurrent.TimeUnit
 
-class PostRepositoryImpl(
-    private val dao: PostDao
-    ) : PostRepository {
-    override fun getAll(): LiveData<List<Post>> {
-        val ld = MutableLiveData<List<Post>>()
-        val l = mutableListOf<Post>()
-        dao.getAll().value?.forEach{
-            l.add(it.toDto())
-        }
-        ld.value = l
-        return ld
+class PostRepositoryImpl : PostRepository {
+
+    private companion object {
+        const val BASE_URL = "http://10.0.2.2:9999/"
+        private val jsonType = "application/json".toMediaType()
     }
 
-    override fun favoritesById(id: Long) {
-        dao.favoritesById(id)
+    private val gson = Gson()
+    private val typeToken = object : TypeToken<List<Post>>() {}
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .build()
+
+    override fun getAll(): List<Post> {
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/posts")
+            .build()
+
+        return client.newCall(request)
+            .execute()
+            .let {
+                it.body?.string()
+            }?.let {
+                gson.fromJson(it, typeToken.type)
+            } ?: emptyList()
+    }
+
+    override fun favorites(id: Long, favoritesByMe: Boolean): Post {
+        val isFavorites: Boolean = !favoritesByMe
+        val favoritesUrl = "${BASE_URL}api/slow/posts/$id/favorites"
+        val request: Request = if(isFavorites) {
+            Request.Builder()
+                .post(gson.toJson(id).toRequestBody(jsonType))
+                .url(favoritesUrl)
+                .build()
+        } else {
+            Request.Builder()
+                .delete(gson.toJson(id).toRequestBody(jsonType))
+                .url(favoritesUrl)
+                .build()
+        }
+        return client.newCall(request)
+            .execute()
+            .let { it.body?.string() ?: throw RuntimeException("body is null") }
+            .let {
+                gson.fromJson(it, Post::class.java)
+            }
     }
 
     override fun sharesById(id: Long) {
-        dao.sharesById(id)
+
     }
 
-    override fun save(post: Post) {
-        dao.save(PostEntity.fromDto(post))
+    override fun save(post: Post): Post {
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/posts")
+            .post(gson.toJson(post).toRequestBody(jsonType))
+            .build()
+
+        return client.newCall(request).execute()
+            .let {
+                it.body?.string()
+            }?.let {
+                gson.fromJson(it, Post::class.java)
+            } ?: error("Empty response body")
     }
 }

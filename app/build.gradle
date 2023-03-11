@@ -31,6 +31,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.usesClearTextTraffic = false
+        }
+        debug {
+            manifestPlaceholders.usesClearTextTraffic = true
         }
     }
     compileOptions {
@@ -61,6 +65,7 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:30.3.2")
     implementation "com.google.firebase:firebase-messaging-ktx"
     implementation  'com.google.gms:google-services:4.3.13'
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
