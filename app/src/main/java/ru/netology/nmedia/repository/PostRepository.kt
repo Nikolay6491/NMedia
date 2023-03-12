@@ -7,4 +7,5 @@ interface PostRepository {
     fun favorites(id: Long, favoritesByMe: Boolean): Post
     fun save(post: Post): Post
     fun sharesById(id: Long)
+    fun removeById(id: Long)
 }

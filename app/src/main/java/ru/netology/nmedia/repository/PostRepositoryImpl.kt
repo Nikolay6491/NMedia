@@ -62,6 +62,10 @@ class PostRepositoryImpl : PostRepository {
 
     }
 
+    override fun removeById(id: Long) {
+
+    }
+
     override fun save(post: Post): Post {
         val request = Request.Builder()
             .url("${BASE_URL}api/slow/posts")
