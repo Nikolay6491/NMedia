@@ -1,11 +1,17 @@
 package ru.netology.nmedia.repository
 
+import okhttp3.Callback
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-    fun getAll(): List<Post>
-    fun favorites(id: Long, favoritesByMe: Boolean): Post
-    fun save(post: Post): Post
-    fun sharesById(id: Long)
-    fun removeById(id: Long)
+    fun getAllAsync(callback: Callback<List<Post>>)
+    fun favoritesAsync(id: Long, favoritesByMe: Boolean, callback: Callback<Post>)
+    fun saveAsync(post: Post, callback: Callback<Post>)
+    fun sharesByIdAsync(id: Long, callback: Callback<Post>)
+    fun removeByIdAsync(id: Long, callback: Callback<Post>)
+
+    interface Callback<T> {
+        fun onSuccess(posts: T)
+        fun onError(e: Exception)
+    }
 }

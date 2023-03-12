@@ -1,12 +1,13 @@
 package ru.netology.nmedia.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nmedia.dto.Post
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class PostRepositoryImpl : PostRepository {
@@ -22,24 +23,32 @@ class PostRepositoryImpl : PostRepository {
         .connectTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    override fun getAll(): List<Post> {
+    override fun getAllAsync(callback: PostRepository.Callback<List<Post>>) {
         val request = Request.Builder()
             .url("${BASE_URL}api/slow/posts")
             .build()
 
-        return client.newCall(request)
-            .execute()
-            .let {
-                it.body?.string()
-            }?.let {
-                gson.fromJson(it, typeToken.type)
-            } ?: emptyList()
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        val body = response.body?.string() ?: throw RuntimeException("body is null")
+                        callback.onSuccess(gson.fromJson(body, typeToken.type))
+                    } catch (e: Exception) {
+                        callback.onError(e)
+                    }
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+            })
     }
 
-    override fun favorites(id: Long, favoritesByMe: Boolean): Post {
+    override fun favoritesAsync(id: Long, favoritesByMe: Boolean, callback: PostRepository.Callback<Post>) {
         val isFavorites: Boolean = !favoritesByMe
         val favoritesUrl = "${BASE_URL}api/slow/posts/$id/favorites"
-        val request: Request = if(isFavorites) {
+        val request: Request = if (isFavorites) {
             Request.Builder()
                 .post(gson.toJson(id).toRequestBody(jsonType))
                 .url(favoritesUrl)
@@ -50,33 +59,60 @@ class PostRepositoryImpl : PostRepository {
                 .url(favoritesUrl)
                 .build()
         }
-        return client.newCall(request)
-            .execute()
-            .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let {
-                gson.fromJson(it, Post::class.java)
-            }
+
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    callback.onSuccess(gson.fromJson(response.body?.string(), Post::class.java))
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+            })
     }
 
-    override fun sharesById(id: Long) {
-
+    override fun sharesByIdAsync(id: Long, callback: PostRepository.Callback<Post>) {
+        Log.e("PostRepositoryImpl", "Share is not yet implemented")
     }
 
-    override fun removeById(id: Long) {
+    override fun removeByIdAsync(id: Long, callback: PostRepository.Callback<Post>) {
+        val request: Request = Request.Builder()
+            .delete()
+            .url("${BASE_URL}/api/slow/posts/$id")
+            .build()
 
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    callback.onSuccess(Post(0, "", "", "", 0, 0, 0,
+                        favoritesByMe = true,
+                        sharesByMe = true,
+                        video = ""
+                    ))
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+            })
     }
 
-    override fun save(post: Post): Post {
+    override fun saveAsync(post: Post, callback: PostRepository.Callback<Post>) {
         val request = Request.Builder()
             .url("${BASE_URL}api/slow/posts")
             .post(gson.toJson(post).toRequestBody(jsonType))
             .build()
 
-        return client.newCall(request).execute()
-            .let {
-                it.body?.string()
-            }?.let {
-                gson.fromJson(it, Post::class.java)
-            } ?: error("Empty response body")
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    callback.onSuccess(post)
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+            })
     }
 }
