@@ -15,10 +15,12 @@ private val empty = Post(
     id = 0,
     content = "",
     author = "",
+    authorAvatar = "",
     published = "",
     favoritesByMe = false,
     sharesByMe = false,
-    video = null
+    video = null,
+    attachment = null
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
@@ -103,6 +105,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             })
         }
         edited.postValue(empty)
-
     }
 }

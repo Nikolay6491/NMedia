@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a7b22db5d4f69810ddcd9ffec935e54c",
+    "identityHash": "ddde6937d97c265de2b23568ee9cb763",
     "entities": [
       {
         "tableName": "PostEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `content` TEXT NOT NULL, `published` TEXT NOT NULL, `favorites` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `views` INTEGER NOT NULL, `favoritesByMe` INTEGER NOT NULL, `sharesByMe` INTEGER NOT NULL, `video` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `aythorAvatar` TEXT NOT NULL, `content` TEXT NOT NULL, `published` TEXT NOT NULL, `favorites` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `views` INTEGER NOT NULL, `favoritesByMe` INTEGER NOT NULL, `sharesByMe` INTEGER NOT NULL, `video` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -17,6 +17,12 @@
           {
             "fieldPath": "author",
             "columnName": "author",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aythorAvatar",
+            "columnName": "aythorAvatar",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -82,8 +88,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7b22db5d4f69810ddcd9ffec935e54c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ddde6937d97c265de2b23568ee9cb763')"
     ]
   }
-
 }
