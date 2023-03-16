@@ -32,7 +32,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders.usesClearTextTraffic = false
-            buildConfigField "String", "BASE_URL", "https://netomedia.ru"
+            buildConfigField "String", "BASE_URL", '"https://netomedia.ru"'
         }
         debug {
             manifestPlaceholders.usesClearTextTraffic = true
