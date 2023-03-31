@@ -15,7 +15,8 @@ data class Post(
     val favoritesByMe: Boolean,
     val sharesByMe: Boolean,
     val video: String?,
-    val attachment: Attachment? = null
+    val show: Boolean,
+    val attachment: Boolean? = null
 )
 
 data class Attachment(

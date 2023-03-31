@@ -107,6 +107,16 @@ class FeedFragment : Fragment() {
             }
         }
 
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            val newPosts = state.posts.size > adapter.currentList.size
+            adapter.submitList(state.posts) {
+                if (newPosts) {
+                    binding.list.smoothScrollToPosition(0)
+                }
+            }
+            binding.empty.isVisible = state.empty
+        }
+
         binding.retry.setOnClickListener {
             viewModel.load()
         }
@@ -121,6 +131,15 @@ class FeedFragment : Fragment() {
                 return@observe
             }
             newPostLauncher.launch(it.content)
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            binding.newPosts.isVisible = state > 0
+            println(state)
+        }
+        binding.newPosts.setOnClickListener {
+            binding.newPosts.isVisible = false
+            viewModel.markRead()
         }
 
         binding.fab.setOnClickListener {

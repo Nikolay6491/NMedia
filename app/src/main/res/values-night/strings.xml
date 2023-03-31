@@ -19,4 +19,5 @@
     <string name="error">Something bad happened</string>
     <string name="retry">Retry</string>
     <string name="empty_posts">Empry posts</string>
+    <string name="new_post" >New post</string>
 </resources>

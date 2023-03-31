@@ -22,7 +22,11 @@ interface PostsApiService {
 
     @POST("posts/{id}/favorites")
     suspend fun favoritesById(@Path("id") id: Long): Response<Post>
+
+    @GET("posts/{id}/newer")
+    suspend fun getNewer(@Path("id") id: Long): Response<List<Post>>
 }
+
 object PostsApi {
 
     private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
