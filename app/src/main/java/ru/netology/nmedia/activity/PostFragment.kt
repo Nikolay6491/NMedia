@@ -38,8 +38,8 @@ class PostFragment : Fragment() {
                 )
             }
 
-            override fun onFavorite(post: Post) {
-                viewModel.favoriteById(post.id, post.favoritesByMe)
+            override fun onLike(post: Post) {
+                viewModel.likesById(post.id, post.likesByMe)
             }
 
             override fun onShare(post: Post) {

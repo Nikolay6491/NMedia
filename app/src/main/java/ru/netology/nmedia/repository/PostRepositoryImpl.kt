@@ -36,10 +36,10 @@ class PostRepositoryImpl : PostRepository {
             } ?: emptyList()
     }
 
-    override fun favorites(id: Long, favoritesByMe: Boolean): Post {
-        val isFavorites: Boolean = !favoritesByMe
-        val favoritesUrl = "${BASE_URL}api/slow/posts/$id/favorites"
-        val request: Request = if(isFavorites) {
+    override fun likes(id: Long, likesByMe: Boolean): Post {
+        val isLikes: Boolean = !likesByMe
+        val favoritesUrl = "${BASE_URL}api/slow/posts/$id/likes"
+        val request: Request = if(isLikes) {
             Request.Builder()
                 .post(gson.toJson(id).toRequestBody(jsonType))
                 .url(favoritesUrl)

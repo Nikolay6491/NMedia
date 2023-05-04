@@ -22,11 +22,11 @@ interface PostDao {
 
     @Query("""
        UPDATE PostEntity SET
-        favorites = favorites + CASE WHEN favorites THEN -1 ELSE 1 END,
-        favoritesByMe = CASE WHEN favoritesByMe THEN 0 ELSE 1 END
+        likes = likes + CASE WHEN likes THEN -1 ELSE 1 END,
+        likesByMe = CASE WHEN likesByMe THEN 0 ELSE 1 END
         WHERE id = :id;
     """)
-    fun favoritesById(id: Long)
+    fun likesById(id: Long)
 
     @Query("""
        UPDATE PostEntity SET

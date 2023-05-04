@@ -13,7 +13,7 @@ import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 
 interface OnInteractionListener {
-    fun onFavorite(post: Post) {}
+    fun onLike(post: Post) {}
     fun onShare(post: Post) {}
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
@@ -42,8 +42,8 @@ class PostViewHolder(
     lateinit var post: Post
 
     init {
-        binding.favorite.setOnClickListener{
-            onInteractionListener.onFavorite(post)
+        binding.like.setOnClickListener{
+            onInteractionListener.onLike(post)
         }
         binding.share.setOnClickListener {
             onInteractionListener.onShare(post)
@@ -82,17 +82,11 @@ class PostViewHolder(
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            favorites.text = PostService.showValues(post.favorites)
-            favorite.isChecked = post.favoritesByMe
+            likes.text = PostService.showValues(post.likes)
+            like.isChecked = post.likesByMe
             shares.text = PostService.showValues(post.shares)
-
-            if (post.video == null) {
-                videoContent.isVisible
-                playButton.isVisible
-            } else {
-                videoContent.isVisible
-                playButton.isVisible
-            }
+            videoContent.isVisible = !post.video.isNullOrBlank()
+            playButton.isVisible = !post.video.isNullOrBlank()
         }
     }
 }

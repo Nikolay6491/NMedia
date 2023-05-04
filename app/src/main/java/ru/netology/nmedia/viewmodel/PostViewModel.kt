@@ -17,7 +17,7 @@ private val empty = Post(
     content = "",
     author = "",
     published = "",
-    favoritesByMe = false,
+    likesByMe = false,
     sharesByMe = false,
     video = null
 )
@@ -52,9 +52,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = post
     }
 
-    fun favoriteById(id: Long, favoritesByMe: Boolean) {
+    fun likesById(id: Long, likesByMe: Boolean) {
         thread {
-            val newPost = repository.favorites(id, favoritesByMe)
+            val newPost = repository.likes(id, likesByMe)
             val old = _data.value?.posts.orEmpty()
             val posts = listOf(newPost)+old
             _data.postValue(FeedModel(posts=posts))
