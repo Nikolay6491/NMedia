@@ -83,7 +83,7 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
             likes.text = PostService.showValues(post.likes)
-            like.isChecked = post.likesByMe
+            like.isChecked = post.likedByMe
             shares.text = PostService.showValues(post.shares)
             videoContent.isVisible = !post.video.isNullOrBlank()
             playButton.isVisible = !post.video.isNullOrBlank()

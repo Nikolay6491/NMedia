@@ -36,8 +36,8 @@ class PostRepositoryImpl : PostRepository {
             } ?: emptyList()
     }
 
-    override fun likes(id: Long, likesByMe: Boolean): Post {
-        val isLikes: Boolean = !likesByMe
+    override fun likes(id: Long, likedByMe: Boolean): Post {
+        val isLikes: Boolean = !likedByMe
         val favoritesUrl = "${BASE_URL}api/slow/posts/$id/likes"
         val request: Request = if(isLikes) {
             Request.Builder()

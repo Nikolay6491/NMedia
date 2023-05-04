@@ -17,7 +17,7 @@ private val empty = Post(
     content = "",
     author = "",
     published = "",
-    likesByMe = false,
+    likedByMe = false,
     sharesByMe = false,
     video = null
 )
@@ -52,9 +52,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = post
     }
 
-    fun likesById(id: Long, likesByMe: Boolean) {
+    fun likesById(id: Long, likedByMe: Boolean) {
         thread {
-            val newPost = repository.likes(id, likesByMe)
+            val newPost = repository.likes(id, likedByMe)
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()
                     .map {
