@@ -68,6 +68,10 @@ class FeedFragment : Fragment() {
                 viewModel.likesById(post.id, post.likedByMe)
             }
 
+            override fun onRemove(post: Post) {
+                viewModel.removeById(post.id)
+            }
+
             override fun onShare(post: Post) {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
