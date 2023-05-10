@@ -100,23 +100,9 @@ class FeedFragment : Fragment() {
             viewModel.load()
         }
 
-        val newPostLauncher = registerForActivityResult(NewPostFragment.Contract) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-        }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            if (it.id == 0L) {
-                return@observe
-            }
-            newPostLauncher.launch(it.content)
-        }
-
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
         return binding.root
-
-
     }
 }

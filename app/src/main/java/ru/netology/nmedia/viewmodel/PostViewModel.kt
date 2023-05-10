@@ -56,7 +56,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun likesById(id: Long, likedByMe: Boolean) {
         repository.likesAsync(id, likedByMe, object : PostRepository.Callback<Post> {
             override fun onSuccess(posts: Post) {
-                _postCreated.postValue(Unit)
+                _data.postValue(
+                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                        .filter { it.id != id }
+                    )
+                )
             }
 
             override fun onError(e: Exception) {
@@ -102,5 +106,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             })
         }
             edited.postValue(empty)
-        }
+    }
 }

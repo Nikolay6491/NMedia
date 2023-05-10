@@ -63,21 +63,6 @@ class PostFragment : Fragment() {
             }
         })
 
-        val newPostLauncher = registerForActivityResult(NewPostFragment.Contract) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-        }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            if (it.id == 0L) {
-                return@observe
-            }
-            newPostLauncher.launch(it.content)
-        }
-
         return binding.root
-
-
     }
-
 }
