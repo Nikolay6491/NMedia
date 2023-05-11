@@ -100,12 +100,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun save() {
-        edited.value?.let {
+        edited.value?.let { it ->
             repository.saveAsync(it, object : PostRepository.Callback<Post> {
                 override fun onSuccess(posts: Post) {
                     _postCreated.postValue(Unit)
                     _data.postValue(
                         _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                            .map {
+                                if(it.id != posts.id) it
+                                else posts
+                            }
                         )
                     )
                 }
