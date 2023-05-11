@@ -27,4 +27,5 @@
     <string name="error">Случилось что-то плохое</string>
     <string name="retry">Повторить</string>
     <string name="empty_posts">Пустые сообщения</string>
+    <string name="post_image">Изображение</string>
 </resources>

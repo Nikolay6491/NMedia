@@ -15,10 +15,12 @@ private val empty = Post(
     id = 0,
     content = "",
     author = "",
+    authorAvatar = "",
     published = "",
     likedByMe = false,
     sharesByMe = false,
-    video = null
+    video = null,
+    attachment = null
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {

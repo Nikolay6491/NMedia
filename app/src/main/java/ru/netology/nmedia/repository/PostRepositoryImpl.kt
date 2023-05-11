@@ -84,7 +84,7 @@ class PostRepositoryImpl : PostRepository {
         client.newCall(request)
             .enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    callback.onSuccess(Post(0, "", "", "", 0, 0, 0,
+                    callback.onSuccess(Post(0, "", "", "", "", 0, 0, 0,
                         likedByMe = true,
                         sharesByMe = true,
                         video = ""

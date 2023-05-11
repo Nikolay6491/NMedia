@@ -2,15 +2,18 @@ package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostService
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.type.AttachmentType
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
@@ -40,6 +43,8 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     lateinit var post: Post
+    private val urlAuthor = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+    private val urlAttachment = "http://10.0.2.2:9999/attachment/${post.attachment}"
 
     init {
         binding.like.setOnClickListener{
@@ -74,6 +79,7 @@ class PostViewHolder(
             onInteractionListener.playVideo(post)
         }
 
+        binding.avatar.load(urlAuthor)
     }
 
     fun bind(post: Post) {
@@ -87,7 +93,28 @@ class PostViewHolder(
             shares.text = PostService.showValues(post.shares)
             videoContent.isVisible = !post.video.isNullOrBlank()
             playButton.isVisible = !post.video.isNullOrBlank()
+
+            if ((post.attachment != null) && (post.attachment.type == AttachmentType.IMAGE)) {
+                Glide.with(binding.attachment)
+                    .load(urlAttachment)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .timeout(10_000)
+                    .into(binding.attachment)
+                attachment.isVisible = true
+            } else attachment.isVisible = false
         }
+    }
+
+    private fun ImageView.load(url: String) {
+        Glide.with(this)
+            .load(url)
+            .placeholder(R.drawable.ic_loading_100dp)
+            .error(R.drawable.ic_error_100dp)
+            .timeout(10_000)
+            .circleCrop()
+            .into(this)
+
     }
 }
 
