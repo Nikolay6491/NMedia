@@ -37,6 +37,5 @@ data class PostEntity(
                 dto.sharesByMe,
                 dto.video
             )
-
     }
 }

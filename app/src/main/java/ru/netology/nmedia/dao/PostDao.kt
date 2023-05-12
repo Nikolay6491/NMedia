@@ -34,5 +34,4 @@ interface PostDao {
         WHERE id = :id;
     """)
     fun sharesById(id: Long)
-
 }

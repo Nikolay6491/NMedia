@@ -40,7 +40,6 @@ object PostService {
         }
         return displayValue
     }
-
 }
 
 class FeedFragment : Fragment() {

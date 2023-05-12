@@ -3,7 +3,6 @@ package ru.netology.nmedia.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -103,23 +102,10 @@ class PostViewHolder(
             playButton.setOnClickListener {
                 onInteractionListener.playVideo(post)
             }
-
             videoContent.setOnClickListener {
                 onInteractionListener.playVideo(post)
             }
-
-            avatar.load(urlAuthor)
         }
-    }
-
-    private fun ImageView.load(url: String) {
-        Glide.with(this)
-            .load(url)
-            .placeholder(R.drawable.ic_loading_100dp)
-            .error(R.drawable.ic_error_100dp)
-            .timeout(10_000)
-            .circleCrop()
-            .into(this)
     }
 }
 
@@ -131,5 +117,4 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
-
 }
