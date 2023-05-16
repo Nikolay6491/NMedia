@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+import com.bumptech.glide.util.Util
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
@@ -7,7 +8,7 @@ interface PostRepository {
     fun likesAsync(id: Long, likedByMe: Boolean, callback: Callback<Post>)
     fun saveAsync(post: Post, callback: Callback<Post>)
     fun sharesByIdAsync(id: Long, callback: Callback<Post>)
-    fun removeByIdAsync(id: Long, callback: Callback<Post>)
+    fun removeByIdAsync(id: Long, callback: Callback<Util>)
 
     interface Callback<T> {
         fun onSuccess(posts: T)

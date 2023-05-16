@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.util.Util
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.repository.PostRepository
@@ -77,8 +78,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeById(id: Long) {
         _data.value?.posts.orEmpty()
-        repository.removeByIdAsync(id, object : PostRepository.Callback<Post> {
-            override fun onSuccess(posts: Post) {
+        repository.removeByIdAsync(id, object : PostRepository.Callback<Util> {
+            override fun onSuccess(posts: Util) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .filter { it.id != id }
