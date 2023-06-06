@@ -1,17 +1,13 @@
 package ru.netology.nmedia.repository
 
-import com.bumptech.glide.util.Util
+import androidx.lifecycle.LiveData
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-    fun getAllAsync(callback: Callback<List<Post>>)
-    fun likesAsync(id: Long, likedByMe: Boolean, callback: Callback<Post>)
-    fun saveAsync(post: Post, callback: Callback<Post>)
-    fun sharesByIdAsync(id: Long, callback: Callback<Post>)
-    fun removeByIdAsync(id: Long, callback: Callback<Util>)
-
-    interface Callback<T> {
-        fun onSuccess(posts: T)
-        fun onError(e: Exception)
-    }
+    val data: LiveData<List<Post>>
+    suspend fun getAll()
+    suspend fun likes(id: Long, favoritesByMe: Boolean)
+    suspend fun save(post: Post)
+    suspend fun sharesById(id: Long)
+    suspend fun removeById(id: Long)
 }
