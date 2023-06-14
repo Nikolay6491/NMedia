@@ -106,10 +106,6 @@ class FeedFragment : Fragment() {
             }
         }
 
-        binding.retry.setOnClickListener {
-            viewModel.load()
-        }
-
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
