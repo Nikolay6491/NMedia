@@ -59,6 +59,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         try {
             repository.likes(id, likedByMe)
             _postCreated.postValue(Unit)
+            _dataState.value = FeedModelState.Idle
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
         }
@@ -68,6 +69,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         data.value?.posts.orEmpty()
         try {
             repository.removeById(id)
+            _dataState.value = FeedModelState.Idle
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
         }
