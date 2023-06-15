@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".activity.FeedFragment">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fabTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/iconButtonMinSize"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/new_post"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/iconButtonMinSize"
+        app:icon="@drawable/ic_baseline_north_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

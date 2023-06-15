@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
@@ -107,6 +108,23 @@ class FeedFragment : Fragment() {
             }
 
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            binding.fabTop.isVisible = state > 0
+        }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    binding.list.smoothScrollToPosition(0)
+                }
+            }
+        })
+
+        binding.fabTop.setOnClickListener {
+            viewModel.loadVisiblePosts()
+            binding.fabTop.isVisible = false
         }
 
         binding.refresh.setOnRefreshListener {
