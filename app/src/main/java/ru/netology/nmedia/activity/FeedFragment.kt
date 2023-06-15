@@ -109,6 +109,10 @@ class FeedFragment : Fragment() {
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
         }
 
+        binding.refresh.setOnClickListener {
+            viewModel.refresh()
+        }
+
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
