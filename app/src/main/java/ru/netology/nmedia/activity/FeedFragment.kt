@@ -89,6 +89,7 @@ class FeedFragment : Fragment() {
                 startActivity(intent)
             }
         })
+
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
@@ -104,6 +105,8 @@ class FeedFragment : Fragment() {
                     }
                     .show()
             }
+
+            binding.refresh.isRefreshing = state is FeedModelState.Refresh
         }
 
         binding.fab.setOnClickListener {

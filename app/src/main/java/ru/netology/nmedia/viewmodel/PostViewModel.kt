@@ -51,6 +51,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun refresh() = viewModelScope.launch {
+        _dataState.value = FeedModelState.Refresh
+        try {
+            repository.getAll()
+            _dataState.value = FeedModelState.Idle
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState.Error
+        }
+    }
+
     fun edit(post: Post) = viewModelScope.launch {
         edited.value = post
     }
@@ -86,6 +96,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun save() = viewModelScope.launch {
         edited.value?.let {
             repository.save(it)
+            _postCreated.postValue(Unit)
         }
         edited.postValue(empty)
     }

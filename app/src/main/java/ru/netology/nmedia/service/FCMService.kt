@@ -34,8 +34,6 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-
-        try {
             message.data[action]?.let {
                 when (Action.valueOf(it)) {
                     Action.LIKE -> handleLike(
@@ -52,35 +50,11 @@ class FCMService : FirebaseMessagingService() {
                     )
                 }
             }
-        } catch (error: IllegalArgumentException) {
-            errorNotification(gson.fromJson(message.data[content], Notification::class.java))
-        }
     }
 
 
     override fun onNewToken(token: String) {
         println(token)
-    }
-
-    private fun errorNotification(content: Notification) {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setShowWhen(false)
-            .setContentTitle(
-                getString(
-                    R.string.error_notification_title
-                )
-            )
-            .setContentText(
-                getString(
-                    R.string.error_notification_text
-                )
-            )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
-
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
     }
 
     private fun handleLike(content: Like) {
@@ -135,8 +109,3 @@ data class NewPost(
     val postAuthor: String,
     val postContent: String
 )
-
-data class Notification(
-    val textNotification: String
-)
-
