@@ -109,7 +109,7 @@ class FeedFragment : Fragment() {
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
         }
 
-        binding.refresh.setOnClickListener {
+        binding.refresh.setOnRefreshListener {
             viewModel.refresh()
         }
 
