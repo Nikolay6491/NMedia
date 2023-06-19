@@ -8,6 +8,7 @@ import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
+import ru.netology.nmedia.entity.toDto
 import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.AppError
@@ -19,9 +20,8 @@ class PostRepositoryImpl(
     private val postDao: PostDao
 ) : PostRepository {
 
-    override val data: Flow<List<Post>> = postDao.getAll().map {
-        it.map(PostEntity::toDto)
-    }
+    override var data = postDao.getAllVisible()
+        .map(List<PostEntity>::toDto)
         .flowOn(Dispatchers.Default)
 
     override suspend fun getAll() {
