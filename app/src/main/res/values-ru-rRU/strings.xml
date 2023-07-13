@@ -29,4 +29,10 @@
     <string name="empty_posts">Пустые сообщения</string>
     <string name="post_image">Изображение</string>
     <string name="new_post">Новый пост</string>
+    <string name="clear">Удалить</string>
+    <string name="photo_pick_error">Ошибка выбора фотографии</string>
+    <string name="description_select_photo">Выберите фотографию</string>
+    <string name="description_take_photo">Сделайте снимок</string>
+    <string name="description_photo">Фотография</string>
+    <string name="remove">Удалить</string>
 </resources>

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun playVideo(post: Post) {}
+    fun getPostById(id: Long)
 }
 
 class PostsAdapter(
@@ -62,7 +64,7 @@ class PostViewHolder(
                 .circleCrop()
                 .into(avatar)
 
-            val urlAttachment = "http://10.0.2.2:9999/images/${post.attachment?.url}"
+            val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
             if (post.attachment != null) {
                 Glide.with(attachment.context)
                     .load(urlAttachment)
@@ -104,6 +106,14 @@ class PostViewHolder(
             }
             videoContent.setOnClickListener {
                 onInteractionListener.playVideo(post)
+            }
+
+            postImage.setOnClickListener {
+                onInteractionListener.getPostById(post.id)
+                it.findNavController()
+                    .navigate(
+                        R.id.action_feedFragment_to_imageFragment
+                    )
             }
         }
     }

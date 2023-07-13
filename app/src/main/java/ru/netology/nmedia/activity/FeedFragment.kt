@@ -89,6 +89,10 @@ class FeedFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
             }
+
+            override fun getPostById(id: Long){
+                viewModel.getPostById(id)
+            }
         })
 
         binding.list.adapter = adapter
