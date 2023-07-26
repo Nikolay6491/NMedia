@@ -9,4 +9,5 @@
     <dimen name="icon_button_padding">24dp</dimen>
     <dimen name="icon_button_min_size">24dp</dimen>
     <dimen name="common_spacing">16dp</dimen>
+    <dimen name="big_dimen">48dp</dimen>
 </resources>

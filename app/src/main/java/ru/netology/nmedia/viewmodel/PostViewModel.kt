@@ -4,9 +4,12 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
@@ -23,27 +26,39 @@ private val empty = Post(
     id = 0,
     content = "",
     author = "",
+    authorId = 0L,
     authorAvatar = "",
     published = "",
     likedByMe = false,
     sharesByMe = false,
     video = null,
     attachment = null,
-    hidden = true
+    hidden = true,
+    ownedByMe = false
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(application).postDao())
     val edited = MutableLiveData(empty)
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel)
-        .asLiveData(Dispatchers.Default)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val data: LiveData<FeedModel> = AppAuth.getInstance().data.flatMapLatest { token ->
+        repository.data
+            .map { posts ->
+                FeedModel(
+                    posts = posts.map { it.copy(ownedByMe = it.authorId == token.id) },
+                    empty = posts.isEmpty()
+                )
+            }
+    }.asLiveData(Dispatchers.Default)
+
     private val noPhoto = PhotoModel()
     private val _dataState = MutableLiveData<FeedModelState>(FeedModelState.Idle)
     val dataState: LiveData<FeedModelState>
         get() = _dataState
     private val _currentPost = SingleLiveEvent<Post?>()
-    val currentPost:  LiveData<Post?>
+    val currentPost: LiveData<Post?>
         get() = _currentPost
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel?>
@@ -62,7 +77,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         load()
     }
 
-    fun getPostById(id: Long?){
+    fun getPostById(id: Long?) {
         viewModelScope.launch {
             try {
                 val result = repository.getById(id)

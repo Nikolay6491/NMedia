@@ -34,4 +34,11 @@
     <string name="description_take_photo">Take photo</string>
     <string name="description_photo">Photo</string>
     <string name="remove">Remove</string>
+    <string name="sing_in">Sing In</string>
+    <string name="sing_up">Sing Up</string>
+    <string name="logout">Logout</string>
+    <string name="sign_in_error">User name not found or incorrect password/login</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="empty_fields">Fields should not be empty</string>
 </resources>

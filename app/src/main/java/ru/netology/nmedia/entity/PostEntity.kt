@@ -13,6 +13,7 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorId: Long,
     val authorAvatar: String,
     val content: String,
     val published: String,
@@ -26,24 +27,40 @@ data class PostEntity(
     @Embedded
     val attachment: AttachmentEmbeddable?,
 ) {
-    fun toDto() = Post(id, author, authorAvatar, content, published, likes, shares, views, likedByMe, sharesByMe, video, hidden, attachment?.toDto())
+    fun toDto() = Post(
+        id = id,
+        author = author,
+        authorId = authorId,
+        authorAvatar = authorAvatar,
+        content = content,
+        published = published,
+        likes = likes,
+        shares = shares,
+        views = views,
+        likedByMe = likedByMe,
+        sharesByMe = sharesByMe,
+        video = video,
+        hidden = hidden,
+        attachment = attachment?.toDto(),
+        ownedByMe = false)
 
     companion object {
         fun fromDto(dto: Post) =
             PostEntity(
-                dto.id,
-                dto.author,
-                dto.authorAvatar,
-                dto.content,
-                dto.published,
-                dto.likes,
-                dto.shares,
-                dto.views,
-                dto.likedByMe,
-                dto.sharesByMe,
-                dto.video,
-                dto.hidden,
-                AttachmentEmbeddable.fromDto(dto.attachment),
+                id = dto.id,
+                author = dto.author,
+                authorId = dto.authorId,
+                authorAvatar = dto.authorAvatar,
+                content = dto.content,
+                published = dto.published,
+                likes = dto.likes,
+                shares = dto.shares,
+                views = dto.views,
+                likedByMe = dto.likedByMe,
+                sharesByMe = dto.sharesByMe,
+                video = dto.video,
+                hidden = dto.hidden,
+                attachment = AttachmentEmbeddable.fromDto(dto.attachment),
             )
     }
 }

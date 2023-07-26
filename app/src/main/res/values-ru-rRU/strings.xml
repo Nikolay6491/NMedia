@@ -35,4 +35,11 @@
     <string name="description_take_photo">Сделайте снимок</string>
     <string name="description_photo">Фотография</string>
     <string name="remove">Удалить</string>
+    <string name="sing_in">Войти</string>
+    <string name="sing_up">Регистрация</string>
+    <string name="logout">Выйти</string>
+    <string name="sign_in_error">Пользователь не найден или пароль/логин неверен</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="empty_fields">Поля не могут быть пустыми</string>
 </resources>

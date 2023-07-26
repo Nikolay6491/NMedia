@@ -54,6 +54,7 @@ class PostViewHolder(
             videoContent.isVisible = !post.video.isNullOrBlank()
             playButton.isVisible = !post.video.isNullOrBlank()
             attachment.visibility = View.GONE
+            menu.isVisible = post.ownedByMe
 
             val urlAuthor = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
             Glide.with(itemView)
