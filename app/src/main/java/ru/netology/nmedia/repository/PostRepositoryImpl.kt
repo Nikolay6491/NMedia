@@ -50,8 +50,6 @@ class PostRepositoryImpl(
         return if(id!=null) postDao.getById(id).toDto() else null
 
     }
-        .flowOn(Dispatchers.Default)
-
 
     override suspend fun likes(id: Long, likesByMe: Boolean) {
         try {
