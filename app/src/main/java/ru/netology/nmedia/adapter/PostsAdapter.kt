@@ -3,6 +3,7 @@ package ru.netology.nmedia.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
@@ -14,6 +15,7 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostService
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.type.AttachmentType
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
@@ -42,6 +44,7 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
+
 
     fun bind(post: Post) {
         binding.apply {
@@ -116,7 +119,27 @@ class PostViewHolder(
                         R.id.action_feedFragment_to_imageFragment
                     )
             }
+
+            if ((post.attachment != null) && (post.attachment.type == AttachmentType.IMAGE)) {
+                Glide.with(binding.attachment)
+                    .load(urlAttachment)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .timeout(10_000)
+                    .into(binding.attachment)
+                attachment.isVisible = true
+            } else attachment.isVisible = false
         }
+    }
+
+    private fun ImageView.load(url: String) {
+        Glide.with(this)
+            .load(url)
+            .placeholder(R.drawable.ic_loading_100dp)
+            .error(R.drawable.ic_error_100dp)
+            .timeout(10_000)
+            .circleCrop()
+            .into(this)
     }
 }
 

@@ -19,9 +19,11 @@
     <string name="error">Something bad happened</string>
     <string name="retry">Retry</string>
     <string name="empty_posts">Empry posts</string>
+
     <string name="post_image">Post image</string>
     <string name="new_post" >New post</string>
     <string name="sing_in">Sing In</string>
     <string name="sing_up">Sing Up</string>
     <string name="logout">Logout</string>
+
 </resources>

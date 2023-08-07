@@ -103,6 +103,11 @@ class PostRepositoryFilesImpl(val context: Context) : PostRepository {
         data.value = posts
     }
 
+    override fun removeById(id: Long) {
+        posts = posts.filter { it.id != id }
+        data.value = posts
+    }
+
     private fun sync() {
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))

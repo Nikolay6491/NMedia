@@ -7,6 +7,7 @@
       {
         "tableName": "PostEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `authorAvatar` TEXT NOT NULL, `content` TEXT NOT NULL, `published` TEXT NOT NULL, `likes` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `views` INTEGER NOT NULL, `likedByMe` INTEGER NOT NULL, `sharesByMe` INTEGER NOT NULL, `video` TEXT, `hidden` INTEGER NOT NULL)",
+
         "fields": [
           {
             "fieldPath": "id",
@@ -94,7 +95,9 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f70a5b010cae4764093451fad4eab67d')"
+
     ]
   }
 }

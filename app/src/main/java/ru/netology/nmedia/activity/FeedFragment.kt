@@ -8,7 +8,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+
 import androidx.recyclerview.widget.RecyclerView
+
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
@@ -17,8 +19,10 @@ import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
+
 import ru.netology.nmedia.utils.AuthReminder
 import ru.netology.nmedia.viewmodel.AuthViewModel
+
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 object PostService {
@@ -86,6 +90,10 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
+            override fun onRemove(post: Post) {
+                viewModel.removeById(post.id)
+            }
+
             override fun playVideo(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
@@ -99,6 +107,7 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
+
             binding.empty.isVisible = state.empty
         }
 
@@ -132,9 +141,11 @@ class FeedFragment : Fragment() {
             binding.fabTop.isVisible = false
         }
 
+
         binding.refresh.setOnRefreshListener {
             viewModel.loadVisiblePosts()
             viewModel.refresh()
+
         }
 
         binding.fab.setOnClickListener {

@@ -10,7 +10,5 @@ class DbHelper(context: Context, dbVersion: Int, dbName: String, private val DDL
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 }

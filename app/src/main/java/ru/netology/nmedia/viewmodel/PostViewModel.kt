@@ -1,6 +1,7 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+
 import android.net.Uri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -22,25 +23,31 @@ import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 
 
+
 private val empty = Post(
     id = 0,
     content = "",
     author = "",
+
     authorId = 0L,
+
     authorAvatar = "",
     published = "",
     likedByMe = false,
     sharesByMe = false,
     video = null,
+
     attachment = null,
     hidden = true,
     ownedByMe = false
+
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(application).postDao())
     val edited = MutableLiveData(empty)
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val data: LiveData<FeedModel> = AppAuth.getInstance().data.flatMapLatest { token ->
@@ -69,6 +76,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             .catch { e -> e.printStackTrace() }
             .asLiveData(Dispatchers.Default)
     }
+
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
@@ -76,6 +84,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     init {
         load()
     }
+
 
     fun getPostById(id: Long?) {
         viewModelScope.launch {
@@ -102,6 +111,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _dataState.value = FeedModelState.Refresh
         try {
             repository.getAll()
+
             _dataState.value = FeedModelState.Idle
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
@@ -112,11 +122,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = post
     }
 
+
     fun likesById(id: Long, likedByMe: Boolean) = viewModelScope.launch {
         try {
             repository.likes(id, likedByMe)
             _postCreated.postValue(Unit)
             _dataState.value = FeedModelState.Idle
+
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
         }
@@ -125,8 +137,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun removeById(id: Long) = viewModelScope.launch {
         data.value?.posts.orEmpty()
         try {
+
             repository.removeById(id)
             _dataState.value = FeedModelState.Idle
+
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
         }
@@ -139,6 +153,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
         edited.value = edited.value?.copy(content = text)
     }
+
 
     fun save() {
         edited.value?.let {
@@ -178,3 +193,4 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _photo.value = PhotoModel(uri, file)
     }
 }
+

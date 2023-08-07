@@ -1,6 +1,8 @@
 package ru.netology.nmedia.dao
 
+
 import androidx.room.*
+
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.type.AttachmentType
@@ -9,6 +11,7 @@ import ru.netology.nmedia.type.AttachmentType
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
     fun getAll(): Flow<List<PostEntity>>
+
 
     @Query("SELECT * FROM PostEntity WHERE id = :id")
     suspend fun getById(id: Long): PostEntity
@@ -37,13 +40,16 @@ interface PostDao {
     suspend fun save(post: PostEntity) =
         if (post.id == 0L) insert(post) else updateContentById(post.id, post.content)
 
+
     @Query("""
        UPDATE PostEntity SET
         likes = likes + CASE WHEN likes THEN -1 ELSE 1 END,
         likedByMe = CASE WHEN likedByMe THEN 0 ELSE 1 END
         WHERE id = :id;
     """)
+
     suspend fun likesById(id: Long)
+
 
     @Query("""
        UPDATE PostEntity SET
@@ -62,4 +68,5 @@ class Converters {
 
     @TypeConverter
     fun fromAttachmentType(value: AttachmentType) = value.name
+
 }

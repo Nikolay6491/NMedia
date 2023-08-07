@@ -110,6 +110,12 @@ class PostRepositorySharedPrefsImpl(context: Context) : PostRepository {
         sync()
     }
 
+    override fun removeById(id: Long) {
+        posts = posts.filter { it.id != id }
+        data.value = posts
+        sync()
+    }
+
     private fun sync() {
         prefs.edit().apply {
             putString(key, gson.toJson(posts))

@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 
 import android.util.Log
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -20,11 +21,13 @@ import ru.netology.nmedia.error.AppError
 import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.UnknownError
 import ru.netology.nmedia.type.AttachmentType
+
 import java.io.IOException
 
 class PostRepositoryImpl(
     private val postDao: PostDao
 ) : PostRepository {
+
 
     override var data = postDao.getAllVisible()
         .map(List<PostEntity>::toDto)
@@ -45,7 +48,10 @@ class PostRepositoryImpl(
 
     override suspend fun getById(id: Long?): Post? {
         return if(id!=null) postDao.getById(id).toDto() else null
+
     }
+        .flowOn(Dispatchers.Default)
+
 
     override suspend fun likes(id: Long, likesByMe: Boolean) {
         try {
@@ -53,12 +59,14 @@ class PostRepositoryImpl(
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             val posts = response.body() ?: throw ApiError(response.code(), response.message())
             postDao.insert(PostEntity.fromDto(posts))
+
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
             throw UnknownError
         }
     }
+
 
 
     override suspend fun sharesById(id: Long) {
@@ -71,6 +79,7 @@ class PostRepositoryImpl(
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body() ?: throw ApiError(response.code(), response.message())
             postDao.removeById(id)
+
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
@@ -78,9 +87,11 @@ class PostRepositoryImpl(
         }
     }
 
+
     override suspend fun save(post: Post) {
         try {
             val response = PostsApi.service.save(post)
+
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body() ?: throw ApiError(response.code(), response.message())
             postDao.save(PostEntity.fromDto(post))
@@ -89,6 +100,7 @@ class PostRepositoryImpl(
         } catch (e: Exception) {
             throw UnknownError
         }
+
     }
 
     override suspend fun saveWithAttachment(post: Post, upload: MediaUpload) {
@@ -138,12 +150,15 @@ class PostRepositoryImpl(
             })
 
             emit(body.size)
+
         }
     }
         .catch { e -> throw AppError.from(e) }
         .flowOn(Dispatchers.Default)
 
+
     override suspend fun showAll() {
         postDao.showAll()
+
     }
 }

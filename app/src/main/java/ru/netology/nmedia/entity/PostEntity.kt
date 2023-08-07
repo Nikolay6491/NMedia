@@ -13,7 +13,9 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+
     val authorId: Long,
+
     val authorAvatar: String,
     val content: String,
     val published: String,
@@ -23,6 +25,7 @@ data class PostEntity(
     val likedByMe: Boolean,
     val sharesByMe: Boolean,
     val video: String? = null,
+
     val hidden: Boolean = true,
     @Embedded
     val attachment: AttachmentEmbeddable?,
@@ -75,6 +78,7 @@ data class AttachmentEmbeddable(
         fun fromDto(dto: Attachment?) = dto?.let {
             AttachmentEmbeddable(it.url, it.type)
         }
+
     }
 }
 
