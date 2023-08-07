@@ -15,6 +15,8 @@ import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.utils.AuthReminder
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class PostFragment : Fragment() {
@@ -27,6 +29,7 @@ class PostFragment : Fragment() {
         val binding = FragmentPostBinding.inflate(inflater, container, false)
 
         val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
+        val authViewModel: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
         PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -38,42 +41,35 @@ class PostFragment : Fragment() {
                 )
             }
 
-            override fun onFavorite(post: Post) {
-                viewModel.favoriteById(post.id, post.favoritesByMe)
-            }
-
-            override fun onShare(post: Post) {
-                val intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, post.content)
-                    type = "text/plain"
+            override fun onLike(post: Post) {
+                if(authViewModel.authorized){
+                    super.onLike(post)
+                }else{
+                    AuthReminder.remind(binding.root, "You should sign in to like posts!", this@PostFragment)
                 }
-
-                val shareIntent = Intent.createChooser(intent, getString(R.string.share))
-                startActivity(shareIntent)
             }
 
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }
 
+            override fun onShare(post: Post) {
+                if(authViewModel.authorized){
+                    super.onShare(post)
+                }else{
+                    AuthReminder.remind(binding.root, "You should sign in to share posts!", this@PostFragment)
+                }
+            }
+
             override fun playVideo(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
             }
-        })
 
-        val newPostLauncher = registerForActivityResult(NewPostFragment.Contract) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-        }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            if (it.id == 0L) {
-                return@observe
+            override fun getPostById(id: Long){
+                viewModel.getPostById(id)
             }
-            newPostLauncher.launch(it.content)
-        }
+        })
 
         return binding.root
     }

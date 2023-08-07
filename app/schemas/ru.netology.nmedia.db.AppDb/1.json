@@ -2,11 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cb471964a4a0c3d9e51d156446e19212",
+    "identityHash": "f70a5b010cae4764093451fad4eab67d",
     "entities": [
       {
         "tableName": "PostEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `authorAvatar` TEXT NOT NULL, `content` TEXT NOT NULL, `published` TEXT NOT NULL, `favorites` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `views` INTEGER NOT NULL, `favoritesByMe` INTEGER NOT NULL, `sharesByMe` INTEGER NOT NULL, `video` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `authorAvatar` TEXT NOT NULL, `content` TEXT NOT NULL, `published` TEXT NOT NULL, `likes` INTEGER NOT NULL, `shares` INTEGER NOT NULL, `views` INTEGER NOT NULL, `likedByMe` INTEGER NOT NULL, `sharesByMe` INTEGER NOT NULL, `video` TEXT, `hidden` INTEGER NOT NULL)",
+
         "fields": [
           {
             "fieldPath": "id",
@@ -39,8 +40,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "favorites",
-            "columnName": "favorites",
+            "fieldPath": "likes",
+            "columnName": "likes",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -57,8 +58,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "favoritesByMe",
-            "columnName": "favoritesByMe",
+            "fieldPath": "likedByMe",
+            "columnName": "likedByMe",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -73,6 +74,12 @@
             "columnName": "video",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "hidden",
+            "columnName": "hidden",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -88,7 +95,9 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cb471964a4a0c3d9e51d156446e19212')"
+
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f70a5b010cae4764093451fad4eab67d')"
+
     ]
   }
 }

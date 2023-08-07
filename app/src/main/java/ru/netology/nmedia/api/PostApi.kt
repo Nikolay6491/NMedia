@@ -1,5 +1,6 @@
 package ru.netology.nmedia.api
 
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.create
@@ -8,6 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import ru.netology.nmedia.BuildConfig
+import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
 
 interface PostsApiService {
@@ -17,16 +20,22 @@ interface PostsApiService {
     @POST("posts")
     suspend fun save(@Body post: Post): Response<Post>
 
-    @DELETE("posts/{id}")
-    suspend fun removeById(@Path("id") id: Long): Response<Unit>
+    @POST("posts/{id}/likes")
+    suspend fun like(@Path("id") id: Long): Response<Post>
 
-    @POST("posts/{id}/favorites")
-    suspend fun favoritesById(@Path("id") id: Long): Response<Post>
+    @DELETE("posts/{id}/likes")
+    suspend fun unlike(@Path("id") id: Long): Response<Post>
+
+    @DELETE("posts/{id}")
+    suspend fun remove(@Path("id") id: Long): Response<Unit>
 
     @GET("posts/{id}/newer")
     suspend fun getNewer(@Path("id") id: Long): Response<List<Post>>
-}
 
+    @Multipart
+    @POST("media")
+    suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<Media>
+}
 object PostsApi {
 
     private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
@@ -39,6 +48,16 @@ object PostsApi {
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)
+        .addInterceptor { chain ->
+            val request = AppAuth.getInstance().data.value.token?.let {
+                chain.request()
+                    .newBuilder()
+                    .addHeader("Authorization", it)
+                    .build()
+            } ?: chain.request()
+
+            chain.proceed(request)
+        }
         .build()
 
     private val retrofit = Retrofit.Builder()
@@ -47,7 +66,7 @@ object PostsApi {
         .baseUrl(BASE_URL)
         .build()
 
-    val retrofitService by lazy {
+    val service by lazy {
         retrofit.create<PostsApiService>()
     }
 }

@@ -1,16 +1,32 @@
 package ru.netology.nmedia.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+
+import androidx.room.*
+
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.entity.PostEntity
+import ru.netology.nmedia.type.AttachmentType
 
 @Dao
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
     fun getAll(): Flow<List<PostEntity>>
+
+
+    @Query("SELECT * FROM PostEntity WHERE id = :id")
+    suspend fun getById(id: Long): PostEntity
+
+    @Query("SELECT * FROM PostEntity WHERE hidden=0 ORDER BY id DESC")
+    fun getAllVisible(): Flow<List<PostEntity>>
+
+    @Query("UPDATE PostEntity SET hidden = 0 ")
+    suspend fun showAll()
+
+    @Query("SELECT COUNT(*) == 0 FROM PostEntity")
+    suspend fun markRead(): Boolean
+
+    @Query("SELECT COUNT(*) FROM PostEntity WHERE hidden=0")
+    suspend fun count(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: PostEntity)
@@ -21,13 +37,19 @@ interface PostDao {
     @Query("UPDATE PostEntity SET content = :content WHERE id = :id")
     suspend fun updateContentById(id: Long, content: String)
 
+    suspend fun save(post: PostEntity) =
+        if (post.id == 0L) insert(post) else updateContentById(post.id, post.content)
+
+
     @Query("""
        UPDATE PostEntity SET
-        favorites = favorites + CASE WHEN favorites THEN -1 ELSE 1 END,
-        favoritesByMe = CASE WHEN favoritesByMe THEN 0 ELSE 1 END
+        likes = likes + CASE WHEN likes THEN -1 ELSE 1 END,
+        likedByMe = CASE WHEN likedByMe THEN 0 ELSE 1 END
         WHERE id = :id;
     """)
-    suspend fun favoritesById(id: Long)
+
+    suspend fun likesById(id: Long)
+
 
     @Query("""
        UPDATE PostEntity SET
@@ -38,10 +60,13 @@ interface PostDao {
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     suspend fun removeById(id: Long)
+}
 
-    suspend fun save(post: PostEntity) =
-        if (post.id == 0L) insert(post) else updateContentById(post.id, post.content)
+class Converters {
+    @TypeConverter
+    fun toAttachmentType(value: String) = enumValueOf<AttachmentType>(value)
 
-    @Query("UPDATE posts SET viewed = 1 WHERE viewed = 0")
-    suspend fun markRead()
+    @TypeConverter
+    fun fromAttachmentType(value: AttachmentType) = value.name
+
 }

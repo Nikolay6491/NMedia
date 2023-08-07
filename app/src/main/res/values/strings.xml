@@ -28,4 +28,19 @@
     <string name="empty_posts">Empry posts</string>
     <string name="post_image">Post image</string>
     <string name="new_post" >New post</string>
+
+    <string name="clear">Clear</string>
+    <string name="photo_pick_error">Photo pick error</string>
+    <string name="description_select_photo">Select photo</string>
+    <string name="description_take_photo">Take photo</string>
+    <string name="description_photo">Photo</string>
+    <string name="remove">Remove</string>
+    <string name="sing_in">Sing In</string>
+    <string name="sing_up">Sing Up</string>
+    <string name="logout">Logout</string>
+    <string name="sign_in_error">User name not found or incorrect password/login</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="empty_fields">Fields should not be empty</string>
+
 </resources>

@@ -99,7 +99,9 @@
     <ImageView
         android:id="@+id/attachment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+        android:layout_height="match_parent"
+
         android:layout_marginBottom="@dimen/margin_default"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
@@ -115,7 +117,7 @@
         app:constraint_referenced_ids="attachment" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/favorite"
+        android:id="@+id/like"
         style="@style/Widget.AppTheme.FavoriteCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,16 +127,26 @@
         android:contentDescription="@string/favorite"
         app:icon="@drawable/ic_favorite_24dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottomBarrier" />
+
+    <ImageView
+        android:id="@+id/postImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_spacing"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/content" />
 
     <TextView
-        android:id="@+id/favorites"
+        android:id="@+id/likes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        app:layout_constraintBottom_toBottomOf="@id/favorite"
-        app:layout_constraintStart_toEndOf="@id/favorite"
-        app:layout_constraintTop_toTopOf="@id/favorite"
+        app:layout_constraintBottom_toBottomOf="@id/like"
+        app:layout_constraintStart_toEndOf="@id/like"
+        app:layout_constraintTop_toTopOf="@id/like"
         tools:text="@sample/posts.json/data/favorites" />
 
     <com.google.android.material.button.MaterialButton
@@ -146,9 +158,9 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/share"
         app:icon="@drawable/ic_baseline_share_24"
-        app:layout_constraintBottom_toBottomOf="@id/favorite"
-        app:layout_constraintStart_toEndOf="@id/favorites"
-        app:layout_constraintTop_toTopOf="@id/favorite" />
+        app:layout_constraintBottom_toBottomOf="@id/like"
+        app:layout_constraintStart_toEndOf="@id/likes"
+        app:layout_constraintTop_toTopOf="@id/like" />
 
     <TextView
         android:id="@+id/shares"
@@ -169,9 +181,9 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/views"
         app:icon="@drawable/ic_baseline_remove_red_eye_24"
-        app:layout_constraintBottom_toBottomOf="@id/favorite"
+        app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintEnd_toStartOf="@id/views"
-        app:layout_constraintTop_toTopOf="@id/favorite" />
+        app:layout_constraintTop_toTopOf="@id/like" />
 
     <TextView
         android:id="@+id/views"

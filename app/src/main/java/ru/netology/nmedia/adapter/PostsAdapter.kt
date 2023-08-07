@@ -1,10 +1,12 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +18,12 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.type.AttachmentType
 
 interface OnInteractionListener {
-    fun onFavorite(post: Post) {}
+    fun onLike(post: Post) {}
     fun onShare(post: Post) {}
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun playVideo(post: Post) {}
+    fun getPostById(id: Long)
 }
 
 class PostsAdapter(
@@ -42,62 +45,79 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    lateinit var post: Post
-    private val urlAuthor = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
-    private val urlAttachment = "http://10.0.2.2:9999/attachment/${post.attachment}"
-
-    init {
-        binding.favorite.setOnClickListener{
-            onInteractionListener.onFavorite(post)
-        }
-        binding.share.setOnClickListener {
-            onInteractionListener.onShare(post)
-        }
-        binding.menu.setOnClickListener {
-            PopupMenu (it.context, it).apply {
-                inflate(R.menu.options_post)
-                setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.remove -> {
-                            onInteractionListener.onRemove(post)
-                            true
-                        }
-                        R.id.edit -> {
-                            onInteractionListener.onEdit(post)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            }.show()
-        }
-        binding.playButton.setOnClickListener {
-            onInteractionListener.playVideo(post)
-        }
-
-        binding.videoContent.setOnClickListener {
-            onInteractionListener.playVideo(post)
-        }
-
-        binding.avatar.load(urlAuthor)
-    }
 
     fun bind(post: Post) {
-        this.post = post
         binding.apply {
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            favorites.text = PostService.showValues(post.favorites)
-            favorite.isChecked = post.favoritesByMe
+            likes.text = PostService.showValues(post.likes)
+            like.isChecked = post.likedByMe
             shares.text = PostService.showValues(post.shares)
+            videoContent.isVisible = !post.video.isNullOrBlank()
+            playButton.isVisible = !post.video.isNullOrBlank()
+            attachment.visibility = View.GONE
+            menu.isVisible = post.ownedByMe
 
-            if (post.video == null) {
-                videoContent.isVisible
-                playButton.isVisible
+            val urlAuthor = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+            Glide.with(itemView)
+                .load(urlAuthor)
+                .placeholder(R.drawable.ic_loading_100dp)
+                .error(R.drawable.ic_error_100dp)
+                .timeout(10_000)
+                .circleCrop()
+                .into(avatar)
+
+            val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
+            if (post.attachment != null) {
+                Glide.with(attachment.context)
+                    .load(urlAttachment)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .timeout(10_000)
+                    .into(attachment)
+                attachment.isVisible = true
             } else {
-                videoContent.isVisible
-                playButton.isVisible
+                attachment.isVisible = false
+            }
+
+            like.setOnClickListener{
+                onInteractionListener.onLike(post)
+            }
+            share.setOnClickListener {
+                onInteractionListener.onShare(post)
+            }
+            menu.setOnClickListener {
+                PopupMenu (it.context, it).apply {
+                    inflate(R.menu.options_post)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.remove -> {
+                                onInteractionListener.onRemove(post)
+                                true
+                            }
+                            R.id.edit -> {
+                                onInteractionListener.onEdit(post)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
+            playButton.setOnClickListener {
+                onInteractionListener.playVideo(post)
+            }
+            videoContent.setOnClickListener {
+                onInteractionListener.playVideo(post)
+            }
+
+            postImage.setOnClickListener {
+                onInteractionListener.getPostById(post.id)
+                it.findNavController()
+                    .navigate(
+                        R.id.action_feedFragment_to_imageFragment
+                    )
             }
 
             if ((post.attachment != null) && (post.attachment.type == AttachmentType.IMAGE)) {

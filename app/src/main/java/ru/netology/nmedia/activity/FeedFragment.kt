@@ -3,13 +3,14 @@ package ru.netology.nmedia.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+
+import androidx.recyclerview.widget.RecyclerView
+
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
@@ -18,6 +19,10 @@ import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
+
+import ru.netology.nmedia.utils.AuthReminder
+import ru.netology.nmedia.viewmodel.AuthViewModel
+
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 object PostService {
@@ -42,7 +47,6 @@ object PostService {
         }
         return displayValue
     }
-
 }
 
 class FeedFragment : Fragment() {
@@ -55,6 +59,7 @@ class FeedFragment : Fragment() {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
 
         val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
+        val authViewModel: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -66,8 +71,12 @@ class FeedFragment : Fragment() {
                 )
             }
 
-            override fun onFavorite(post: Post) {
-                viewModel.favoriteById(post.id, post.favoritesByMe)
+            override fun onLike(post: Post) {
+                viewModel.likesById(post.id, post.likedByMe)
+            }
+
+            override fun onRemove(post: Post) {
+                viewModel.removeById(post.id)
             }
 
             override fun onShare(post: Post) {
@@ -81,18 +90,20 @@ class FeedFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
-            override fun onRemove(post: Post) {
-                viewModel.removeById(post.id)
-            }
-
             override fun playVideo(post: Post) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                 startActivity(intent)
             }
+
+            override fun getPostById(id: Long){
+                viewModel.getPostById(id)
+            }
         })
+
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
+
             binding.empty.isVisible = state.empty
         }
 
@@ -105,48 +116,46 @@ class FeedFragment : Fragment() {
                     }
                     .show()
             }
-        }
 
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPosts = state.posts.size > adapter.currentList.size
-            adapter.submitList(state.posts) {
-                if (newPosts) {
-                    binding.list.smoothScrollToPosition(0)
-                }
-            }
-            binding.empty.isVisible = state.empty
-        }
-
-        binding.retry.setOnClickListener {
-            viewModel.load()
-        }
-
-        val newPostLauncher = registerForActivityResult(NewPostFragment.Contract) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContent(result)
-        }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            if (it.id == 0L) {
-                return@observe
-            }
-            newPostLauncher.launch(it.content)
+            binding.refresh.isRefreshing = state is FeedModelState.Refresh
         }
 
         viewModel.newerCount.observe(viewLifecycleOwner) { state ->
-            binding.newPosts.isVisible = state > 0
-            println(state)
+            binding.fabTop.isVisible = state > 0
         }
-        binding.newPosts.setOnClickListener {
-            binding.newPosts.isVisible = false
-            viewModel.markRead()
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    binding.list.smoothScrollToPosition(0)
+                }
+            }
+        })
+
+        binding.fabTop.setOnClickListener {
+            viewModel.loadVisiblePosts()
+            binding.fabTop.isVisible = false
+        }
+
+
+        binding.refresh.setOnRefreshListener {
+            viewModel.loadVisiblePosts()
+            viewModel.refresh()
+
         }
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            if (authViewModel.authorized) {
+                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+            } else {
+                AuthReminder.remind(
+                    binding.root,
+                    "You should sign in to share posts!",
+                    this@FeedFragment
+                )
+            }
         }
+
         return binding.root
-
-
     }
 }
