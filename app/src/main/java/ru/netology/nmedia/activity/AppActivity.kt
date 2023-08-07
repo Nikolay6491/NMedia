@@ -78,7 +78,7 @@ class AppActivity : AppCompatActivity() {
                     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                         when(menuItem.itemId) {
                             R.id.signIn -> {
-                                findNavController(R.id.nav_main).navigate(R.id.signInFragment)
+                                findNavController(R.id.container).navigate(R.id.action_feedFragment_to_signInFragment)
                                 true
                             }
                             R.id.signUp -> {

@@ -43,6 +43,7 @@ class SignInFragment: Fragment() {
             binding.incorrect.isVisible = state.error
             if (state.success){
                 postViewModel.refresh()
+                viewModel.clean()
                 findNavController().navigateUp()
             }
         }

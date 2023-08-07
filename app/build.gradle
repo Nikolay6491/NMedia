@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-fido:20.0.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.6'
+    implementation 'androidx.fragment:fragment:1.6.0'
     kapt 'androidx.room:room-compiler:2.5.1'
     implementation platform("com.google.firebase:firebase-bom:30.3.2")
     implementation "com.google.firebase:firebase-messaging-ktx"

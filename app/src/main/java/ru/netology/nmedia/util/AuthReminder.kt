@@ -9,7 +9,7 @@ import ru.netology.nmedia.R
 object AuthReminder {
     fun remind(view: View, message: String, fragment: Fragment){
         Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-            .setAction(R.string.sign_in_error) { findNavController(fragment).navigate(R.id.signInFragment) }
+            .setAction(R.string.sign_in_error) { findNavController(fragment).navigate(R.id.action_feedFragment_to_signInFragment) }
             .show()
     }
 }

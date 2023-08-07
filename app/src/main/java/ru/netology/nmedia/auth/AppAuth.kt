@@ -1,14 +1,10 @@
 package ru.netology.nmedia.auth
 
 import android.content.Context
-import android.text.method.TextKeyListener.clear
 import androidx.core.content.edit
-import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dto.Token
-import java.io.IOException
 
 class AppAuth private constructor(context: Context) {
 
