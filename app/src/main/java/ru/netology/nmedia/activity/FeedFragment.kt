@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 
@@ -60,8 +61,8 @@ class FeedFragment : Fragment() {
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
 
-        val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
-        val authViewModel: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+        val viewModel: PostViewModel by activityViewModels()
+        val authViewModel: AuthViewModel by activityViewModels()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)

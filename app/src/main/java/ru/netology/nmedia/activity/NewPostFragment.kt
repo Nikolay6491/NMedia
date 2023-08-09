@@ -62,7 +62,7 @@ class NewPostFragment : Fragment() {
 
         fragmentBinding = binding
 
-        val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
+        val viewModel: PostViewModel by activityViewModels()
         binding.edit.requestFocus()
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
