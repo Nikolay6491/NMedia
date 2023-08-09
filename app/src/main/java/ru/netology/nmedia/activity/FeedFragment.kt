@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
@@ -49,6 +50,7 @@ object PostService {
     }
 }
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
 
     override fun onCreateView(
@@ -95,7 +97,7 @@ class FeedFragment : Fragment() {
                 startActivity(intent)
             }
 
-            override fun getPostById(id: Long){
+            override fun getPostById(id: Long) {
                 viewModel.getPostById(id)
             }
         })

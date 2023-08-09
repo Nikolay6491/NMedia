@@ -1,13 +1,13 @@
 package ru.netology.nmedia.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
@@ -15,19 +15,28 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.ActivityAppBinding
 import ru.netology.nmedia.viewmodel.AuthViewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var appAuth: AppAuth
+
+    @Inject
+    lateinit var googleApiAvailability: GoogleApiAvailability
+
+    @Inject
+    lateinit var firebaseMessaging: FirebaseMessaging
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            println("current token: $it")
-        }
 
         val binding = ActivityAppBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -50,13 +59,17 @@ class AppActivity : AppCompatActivity() {
                 R.id.action_feedFragment_to_newPostFragment,
                 Bundle().apply { textArg = text }
             )
-        }
 
-        checkGoogleApiAvailability()
+            firebaseMessaging.token.addOnSuccessListener {
+                println("current token: $it")
+            }
+
+            checkGoogleApiAvailability()
+        }
 
         val authViewModel: AuthViewModel by viewModels()
         var currentMenuProvider: MenuProvider? = null
-        authViewModel.data.observe(this) {token ->
+        authViewModel.data.observe(this) { token ->
             val authorized = token.token != null
 
             currentMenuProvider?.let {
@@ -66,17 +79,17 @@ class AppActivity : AppCompatActivity() {
                 object : MenuProvider {
                     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                         menuInflater.inflate(R.menu.auth_menu, menu)
-                        if(authorized){
+                        if (authorized) {
                             menu.setGroupVisible(R.id.authorized, true)
                             menu.setGroupVisible(R.id.unauthorized, false)
-                        }else{
+                        } else {
                             menu.setGroupVisible(R.id.authorized, false)
                             menu.setGroupVisible(R.id.unauthorized, true)
                         }
                     }
 
                     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                        when(menuItem.itemId) {
+                        when (menuItem.itemId) {
                             R.id.signIn -> {
                                 findNavController(R.id.container).navigate(R.id.action_feedFragment_to_signInFragment)
                                 true
@@ -85,7 +98,7 @@ class AppActivity : AppCompatActivity() {
                                 true
                             }
                             R.id.logout -> {
-                                AppAuth.getInstance().remove()
+                                appAuth.remove()
                                 true
                             }
                             else -> false
@@ -100,7 +113,7 @@ class AppActivity : AppCompatActivity() {
 
 
     private fun checkGoogleApiAvailability() {
-        with(GoogleApiAvailability.getInstance()) {
+        with(googleApiAvailability) {
             val code = isGooglePlayServicesAvailable(this@AppActivity)
             if (code == ConnectionResult.SUCCESS) {
                 return@with
@@ -113,7 +126,7 @@ class AppActivity : AppCompatActivity() {
                 .show()
         }
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+        firebaseMessaging.token.addOnSuccessListener {
             println(it)
         }
     }

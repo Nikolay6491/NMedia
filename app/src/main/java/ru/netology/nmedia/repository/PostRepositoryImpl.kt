@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.api.PostsApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Media
@@ -23,9 +23,11 @@ import ru.netology.nmedia.error.UnknownError
 import ru.netology.nmedia.type.AttachmentType
 
 import java.io.IOException
+import javax.inject.Inject
 
-class PostRepositoryImpl(
-    private val postDao: PostDao
+class PostRepositoryImpl @Inject constructor(
+    private val postDao: PostDao,
+    private val apiService: PostsApiService,
 ) : PostRepository {
 
 
@@ -35,7 +37,7 @@ class PostRepositoryImpl(
 
     override suspend fun getAll() {
         try {
-            val response = PostsApi.service.getAll()
+            val response = apiService.getAll()
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             val posts = response.body() ?: throw ApiError(response.code(), response.message())
             postDao.insert(posts.map(PostEntity::fromDto))
@@ -53,7 +55,7 @@ class PostRepositoryImpl(
 
     override suspend fun likes(id: Long, likesByMe: Boolean) {
         try {
-            val response = PostsApi.service.like(id)
+            val response = apiService.like(id)
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             val posts = response.body() ?: throw ApiError(response.code(), response.message())
             postDao.insert(PostEntity.fromDto(posts))
@@ -73,7 +75,7 @@ class PostRepositoryImpl(
 
     override suspend fun removeById(id: Long) {
         try {
-            val response = PostsApi.service.remove(id)
+            val response = apiService.remove(id)
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body() ?: throw ApiError(response.code(), response.message())
             postDao.removeById(id)
@@ -88,7 +90,7 @@ class PostRepositoryImpl(
 
     override suspend fun save(post: Post) {
         try {
-            val response = PostsApi.service.save(post)
+            val response = apiService.save(post)
 
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body() ?: throw ApiError(response.code(), response.message())
@@ -122,7 +124,7 @@ class PostRepositoryImpl(
                 "file", upload.file.name, upload.file.asRequestBody()
             )
 
-            val response = PostsApi.service.uploadMedia(media)
+            val response = apiService.uploadMedia(media)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -138,7 +140,7 @@ class PostRepositoryImpl(
     override fun getNewer(id: Long): Flow<Int> = flow {
         while (true) {
             delay(10_000L)
-            val response = PostsApi.service.getNewer(id)
+            val response = apiService.getNewer(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
