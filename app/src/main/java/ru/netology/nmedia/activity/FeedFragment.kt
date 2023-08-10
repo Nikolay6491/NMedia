@@ -7,13 +7,12 @@ import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-
 import androidx.recyclerview.widget.RecyclerView
-
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
@@ -51,6 +50,7 @@ object PostService {
     }
 }
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
 
@@ -104,10 +104,10 @@ class FeedFragment : Fragment() {
         })
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
-
-            binding.empty.isVisible = state.empty
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest {
+                adapter.submitData(it)
+            }
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
@@ -121,10 +121,6 @@ class FeedFragment : Fragment() {
             }
 
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
-        }
-
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
-            binding.fabTop.isVisible = state > 0
         }
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {

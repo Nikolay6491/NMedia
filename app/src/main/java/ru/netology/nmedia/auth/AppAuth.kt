@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.netology.nmedia.dto.Token
 import javax.inject.Inject
@@ -19,6 +20,7 @@ class AppAuth @Inject constructor(
     private val tokenKey = "token"
     private val _data = MutableStateFlow(Token())
     val data = _data.asStateFlow()
+    private val _authStateFlow: MutableStateFlow<AuthState>
 
     companion object{
         private var INSTANCE: AppAuth? = null
@@ -29,17 +31,21 @@ class AppAuth @Inject constructor(
     }
 
     init {
+        val id = prefs.getLong(idKey, 0)
         val token = prefs.getString(tokenKey, null)
-        val id = prefs.getLong(idKey, 0L)
 
-        if (!prefs.contains(idKey) || !prefs.contains(tokenKey)){
-            prefs.edit{
+        if (id == 0L || token == null) {
+            _authStateFlow = MutableStateFlow(AuthState())
+            with(prefs.edit()) {
                 clear()
+                apply()
             }
         } else {
-            _data.value = Token(id, token)
+            _authStateFlow = MutableStateFlow(AuthState(id, token))
         }
     }
+
+    val authStateFlow: StateFlow<AuthState> = _authStateFlow.asStateFlow()
 
     fun setAuth(token: Token) {
         _data.value = token
@@ -54,4 +60,6 @@ class AppAuth @Inject constructor(
         prefs.edit { clear() }
         _data.value = Token()
     }
+
+    data class AuthState(val id: Long = 0, val token: String? = null)
 }
