@@ -82,7 +82,6 @@ class PostViewModel @Inject constructor(
         load()
     }
 
-
     fun getPostById(id: Long?) {
         viewModelScope.launch {
             try {
@@ -97,7 +96,6 @@ class PostViewModel @Inject constructor(
     fun load() = viewModelScope.launch {
         _dataState.value = FeedModelState.Loading
         try {
-            repository.getAll()
             _dataState.value = FeedModelState.Idle
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
@@ -107,8 +105,6 @@ class PostViewModel @Inject constructor(
     fun refresh() = viewModelScope.launch {
         _dataState.value = FeedModelState.Refresh
         try {
-            repository.getAll()
-
             _dataState.value = FeedModelState.Idle
         } catch (e: Exception) {
             _dataState.value = FeedModelState.Error
