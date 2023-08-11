@@ -12,6 +12,10 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val appAuth: AppAuth,
 ) : ViewModel() {
+
+    val state = appAuth.authStateFlow
+        .asLiveData()
+
     val data: LiveData<Token> = appAuth
         .data
         .asLiveData()

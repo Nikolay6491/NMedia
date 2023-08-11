@@ -2,9 +2,9 @@ package ru.netology.nmedia.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import retrofit2.HttpException
 import ru.netology.nmedia.api.PostsApiService
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.error.ApiError
 import java.io.IOException
 
 class PostPagingSource(
@@ -15,26 +15,30 @@ class PostPagingSource(
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, Post> {
         try {
             val result = when (params) {
-                is LoadParams.Append -> {
-                    postsApiService.getLatest(params.loadSize)
-                }
-                is LoadParams.Prepend -> {
-                    postsApiService.getBefore(id = params.key, count = params.loadSize)
-                }
-                is LoadParams.Refresh -> return LoadResult.Page(
-                    data = emptyList(), nextKey = null, prevKey = params.key,
+                is LoadParams.Refresh -> postsApiService.getLatest(params.loadSize)
+                is LoadParams.Prepend -> return LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = params.key,
+                    nextKey = null
+
                 )
+                is LoadParams.Append -> postsApiService.getBefore(params.key, params.loadSize)
+
             }
 
             if (!result.isSuccessful) {
-                throw HttpException(result)
+                throw ApiError(result.code(), result.message())
             }
 
-            val data = result.body().orEmpty()
+            val body = result.body() ?: throw ApiError(
+                result.code(),
+                result.message()
+            )
+
             return LoadResult.Page(
-                data = data,
+                data = body,
                 prevKey = params.key,
-                data.lastOrNull()?.id
+                body.lastOrNull()?.id
             )
         } catch (e: IOException) {
             return LoadResult.Error(e)
