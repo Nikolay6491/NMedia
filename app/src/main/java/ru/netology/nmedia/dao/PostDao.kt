@@ -1,6 +1,7 @@
 package ru.netology.nmedia.dao
 
 
+import androidx.paging.PagingSource
 import androidx.room.*
 
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,8 @@ interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
     fun getAll(): Flow<List<PostEntity>>
 
+    @Query("SELECT * FROM PostEntity ORDER BY id DESC")
+    fun getPagingSource(): PagingSource<Int, PostEntity>
 
     @Query("SELECT * FROM PostEntity WHERE id = :id")
     suspend fun getById(id: Long): PostEntity
@@ -60,6 +63,9 @@ interface PostDao {
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     suspend fun removeById(id: Long)
+
+    @Query("DELETE FROM PostEntity")
+    suspend fun clear()
 }
 
 class Converters {
