@@ -69,7 +69,7 @@ class AppActivity : AppCompatActivity() {
 
         val authViewModel: AuthViewModel by viewModels()
         var currentMenuProvider: MenuProvider? = null
-        authViewModel.data.observe(this) { token ->
+        authViewModel.state.observe(this) { token ->
             val authorized = token.token != null
 
             currentMenuProvider?.let {

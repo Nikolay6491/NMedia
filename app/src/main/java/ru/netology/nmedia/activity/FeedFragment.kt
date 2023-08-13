@@ -152,7 +152,7 @@ class FeedFragment : Fragment() {
 
         binding.refresh.setOnRefreshListener {
             viewModel.loadVisiblePosts()
-            viewModel.refresh()
+            adapter.refresh()
 
         }
 

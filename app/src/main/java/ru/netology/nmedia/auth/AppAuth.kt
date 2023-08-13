@@ -1,7 +1,6 @@
 package ru.netology.nmedia.auth
 
 import android.content.Context
-import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,17 +47,20 @@ class AppAuth @Inject constructor(
     val authStateFlow: StateFlow<AuthState> = _authStateFlow.asStateFlow()
 
     fun setAuth(token: Token) {
-        _data.value = token
-        prefs.edit {
-            putString(tokenKey, token.token)
+        _authStateFlow.value = AuthState(token.id, token.token)
+        with(prefs.edit()) {
             putLong(idKey, token.id)
-
+            putString(tokenKey, token.token)
+            apply()
         }
     }
 
     fun remove() {
-        prefs.edit { clear() }
-        _data.value = Token()
+        _authStateFlow.value = AuthState()
+        with(prefs.edit()) {
+            clear()
+            commit()
+        }
     }
 
     data class AuthState(val id: Long = 0, val token: String? = null)
