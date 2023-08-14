@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
@@ -49,6 +51,8 @@ object PostService {
     }
 }
 
+@Suppress("DEPRECATION")
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
 
     override fun onCreateView(
@@ -58,8 +62,8 @@ class FeedFragment : Fragment() {
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
 
-        val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
-        val authViewModel: AuthViewModel by viewModels(ownerProducer = ::requireParentFragment)
+        val viewModel: PostViewModel by activityViewModels()
+        val authViewModel: AuthViewModel by activityViewModels()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -95,16 +99,28 @@ class FeedFragment : Fragment() {
                 startActivity(intent)
             }
 
-            override fun getPostById(id: Long){
+            override fun getPostById(id: Long) {
                 viewModel.getPostById(id)
             }
         })
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest {
+                adapter.submitData(it)
+            }
+        }
 
-            binding.empty.isVisible = state.empty
+        authViewModel.state.observe(viewLifecycleOwner) {
+            adapter.refresh()
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest {
+                binding.refresh.isRefreshing = it.refresh is LoadState.Loading
+                        || it.append is LoadState.Loading
+                        || it.prepend is LoadState.Loading
+            }
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
@@ -118,10 +134,6 @@ class FeedFragment : Fragment() {
             }
 
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
-        }
-
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
-            binding.fabTop.isVisible = state > 0
         }
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -140,7 +152,7 @@ class FeedFragment : Fragment() {
 
         binding.refresh.setOnRefreshListener {
             viewModel.loadVisiblePosts()
-            viewModel.refresh()
+            adapter.refresh()
 
         }
 

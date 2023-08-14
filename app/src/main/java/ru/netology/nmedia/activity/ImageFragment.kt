@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentImageBinding
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+@AndroidEntryPoint
 class ImageFragment : Fragment() {
 
     private val viewModel: PostViewModel by activityViewModels()
