@@ -51,16 +51,21 @@ class PostRemoteMediator(
             appDb.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        if (body.isNotEmpty()) {
+                        if (postRemoteKeyDao.min() == null) {
                             postRemoteKeyDao.insert(
                                 PostRemoteKeyEntity(
                                     PostRemoteKeyEntity.KeyType.BEFORE,
                                     body.first().id
                                 ),
                             )
-                        } else {
-                            PostRemoteKeyEntity.KeyType.AFTER
                         }
+                        postRemoteKeyDao.insert(
+                            PostRemoteKeyEntity(
+                                PostRemoteKeyEntity.KeyType.AFTER,
+                                body.first().id
+                            ),
+                        )
+
                     }
                     LoadType.PREPEND -> {
                         postRemoteKeyDao.insert(
