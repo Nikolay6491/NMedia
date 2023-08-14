@@ -10,7 +10,6 @@ import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.PostRemoteKeyEntity
 import ru.netology.nmedia.error.ApiError
 import java.io.IOException
-import kotlin.math.max
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
@@ -59,13 +58,9 @@ class PostRemoteMediator(
                                     body.first().id
                                 ),
                             )
+                        } else {
+                            PostRemoteKeyEntity.KeyType.AFTER
                         }
-                        postRemoteKeyDao.insert(
-                            PostRemoteKeyEntity(
-                                PostRemoteKeyEntity.KeyType.AFTER,
-                                body.first().id
-                            ),
-                        )
                     }
                     LoadType.PREPEND -> {
                         postRemoteKeyDao.insert(
