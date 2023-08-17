@@ -60,14 +60,13 @@ class PostRemoteMediator(
                                 body.last().id
                             ),
                         )
-
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
                                 body.first().id
                             ),
                         )
-
+                        postDao.insert(body.map(PostEntity::fromDto))
                     }
                     LoadType.PREPEND -> {
                         postRemoteKeyDao.insert(
@@ -88,10 +87,7 @@ class PostRemoteMediator(
                         postDao.insertScroll(body.map(PostEntity::fromDto))
                     }
                 }
-
-                postDao.insert(body.map(PostEntity::fromDto))
             }
-
             return MediatorResult.Success(body.isEmpty())
         } catch (e: IOException) {
             return MediatorResult.Error(e)
