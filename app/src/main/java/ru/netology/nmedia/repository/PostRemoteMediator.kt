@@ -70,20 +70,22 @@ class PostRemoteMediator(
 
                     }
                     LoadType.PREPEND -> {
-                        postRemoteKeyDao.insertScroll(
+                        postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
                                 body.first().id,
                             ),
                         )
+                        postDao.insertScroll(body.map(PostEntity::fromDto))
                     }
                     LoadType.APPEND -> {
-                        postRemoteKeyDao.insertScroll(
+                        postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.BEFORE,
                                 body.last().id,
                             ),
                         )
+                        postDao.insertScroll(body.map(PostEntity::fromDto))
                     }
                 }
 
