@@ -145,13 +145,13 @@ class FeedFragment : Fragment() {
             binding.refresh.isRefreshing = state is FeedModelState.Refresh
         }
 
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    binding.list.smoothScrollToPosition(0)
-                }
-            }
-        })
+//        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+//            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+//                if (positionStart == 0) {
+//                    binding.list.smoothScrollToPosition(0)
+//                }
+//            }
+//        })
 
         binding.fabTop.setOnClickListener {
             viewModel.loadVisiblePosts()

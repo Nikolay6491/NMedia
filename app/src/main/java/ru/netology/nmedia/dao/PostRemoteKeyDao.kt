@@ -18,6 +18,9 @@ interface PostRemoteKeyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(postRemoteKeyEntity: PostRemoteKeyEntity)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertScroll(postRemoteKeyEntity: PostRemoteKeyEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(postRemoteKeyEntity: List<PostRemoteKeyEntity>)
 
